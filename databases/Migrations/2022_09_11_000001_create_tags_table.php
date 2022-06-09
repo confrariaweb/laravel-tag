@@ -22,17 +22,11 @@ class CreateTagsTable extends Migration
             $table->softDeletes();
         });
 
-        if(hasAccount())
-        {
-            Schema::table('tags', function (Blueprint $table) {
-                $table->after('id', function ($table) {
-                    $table->foreignId('account_id')
-                        ->constrained('accounts')
-                        ->onUpdate('cascade')
-                        ->onDelete('cascade');
-                });
-            });
-        }
+        Schema::create('taggables', function (Blueprint $table) {
+            $table->foreignId('tag_id')->constrained('tags');
+            $table->morphs('taggable');
+        });
+
     }
 
     /**
